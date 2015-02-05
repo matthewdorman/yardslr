@@ -1,0 +1,39 @@
+---
+- name: Install MySQL Server
+  apt: name={{ item }} state=present
+  with_items:
+    - mysql-server
+    - python-mysqldb
+
+- name: Install DB
+  command: mysql_install_db
+
+- name: Configure MySQL
+  lineinfile: dest=/etc/mysql/my.cnf regexp='^(bind-address\s*=.*)$' line="# \1" backrefs=yes
+  notify: Restart MySQL
+
+- name: Setup MySQL User
+  mysql_user: name=vagrant password=vagrant priv=*.*:ALL host=% state=present
+  mysql_user: name=reslr password=reslr1234 priv=*.*:ALL host=% state=present
+
+- name: Setup MySQL Users
+  mysql_user: name={{ item.name }} password={{ item.password}} priv={{ item.priv }} host=localhost state=present
+  with_items: mysql_users
+
+# Create databases
+- name: Create MySQL Databases
+  mysql_db: name={{ item.dbname }} state=present
+  with_items: mysql_data
+
+# Copy database dump files to remote host and import
+- name: Copy database dump files
+  copy: src={{ item.filename }} dest=/tmp
+  with_items: mysql_data
+
+- name: Import databases
+  mysql_db: name={{ item.dbname }} state=import target=/tmp/{{ item.filename }}
+  with_items: mysql_data
+
+- name: Add Database Hosts to hosts file
+  lineinfile: dest=/etc/hosts line="127.0.0.1 {{ item }}" owner=root group=root mode=0644
+  with_items: mysql_hosts

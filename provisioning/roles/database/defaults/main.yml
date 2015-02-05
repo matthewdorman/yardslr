@@ -1,0 +1,13 @@
+# MySQL metadata
+mysql_data:
+  - { filename: 'reslr.sql.gz', dbname: 'reslr' }
+
+# MySQL users and their permissions
+mysql_users:
+  - { name: 'reslr', password: 'reslr1234', priv: '*.*:ALL', host: 'localhost' }
+  - { name: 'vagrant', password: 'vagrant', priv: '*.*:ALL', host: 'localhost' }
+
+# Host name. This should match what is used in web/templates/apache.conf.j2.
+mysql_hosts:
+  - "{{ project_name }}.local"
+  - "www.{{ project_name }}.local"

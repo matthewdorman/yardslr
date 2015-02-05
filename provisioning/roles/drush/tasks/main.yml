@@ -1,0 +1,5 @@
+---
+# Originally, this role installed drush using PEAR. This method is now
+# deprecated, and it led to permissions problems when the vagrant user tried to
+# use drush. The web/php task already installs drush using composer. I am
+# leaving this stub here in case we later decide to move that task here.

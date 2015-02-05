@@ -1,0 +1,13 @@
+---
+- include: web.yml
+- include: database.yml
+- include: memcache.yml
+- include: drush.yml
+
+- hosts: web
+  gather_facts: smart
+  tasks:
+  - name: Clear caches.
+    command: drush --yes cache-clear all
+    args:
+      chdir: /var/www/yardslr/docroot/sites/default

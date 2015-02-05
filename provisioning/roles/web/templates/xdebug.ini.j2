@@ -1,0 +1,11 @@
+[xdebug]
+zend_extension="{{ php_extension_dir.stdout }}/xdebug.so"
+xdebug.remote_enable={{ php_xdebug_remote_enable }}
+xdebug.remote_connect_back={{ php_xdebug_remote_connect_back }}
+xdebug.remote_host={{ php_xdebug_remote_host }}
+xdebug.remote_port={{ php_xdebug_remote_port }}
+xdebug.remote_handler=dbgp
+xdebug.remote_log={{ php_xdebug_remote_log }}
+xdebug.profiler_enable_trigger={{ php_xdebug_profiler_enable_trigger }}
+xdebug.profiler_output_dir={{ php_xdebug_profiler_output_dir }}
+xdebug.idekey={{ php_xdebug_idekey }}

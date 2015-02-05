@@ -1,0 +1,10 @@
+---
+# On vagrant, we could just use /opt/vagrant_ruby/bin/ruby (currently v.
+# 1.8.7). In case this role ever gets used for a real install, let's install
+# ruby. Currently, this installs the smae 1.8.7.
+- name: Ensure that ruby and gem are installed.
+  apt: name=rubygems state=present
+
+- name: Install ruby gems.
+  gem: name={{ item }} state=present user_install=no
+  with_items: css_ruby_gems

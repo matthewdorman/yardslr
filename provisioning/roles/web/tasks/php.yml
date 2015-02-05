@@ -1,0 +1,78 @@
+---
+- name: Install PHP
+  apt: name={{ item }} state=present
+  with_items:
+    - libapache2-mod-php5
+    - php5-cli
+    - php5-common
+    - php5-curl
+    - php5-gd
+    - php5-imagick
+    - php5-mysql
+    - php5-memcached
+    - php5-mcrypt
+    - php5-xdebug
+    - php-pear
+  notify: Restart Apache
+
+# Enable PHP5
+- name: Enable PHP
+  file:
+    src: ../mods-available/php5.conf
+    dest: /etc/apache2/mods-enabled/php5.conf
+    state: link
+  file:
+    src: ../mods-available/php5.load
+    dest: /etc/apache2/mods-enabled/php5.load
+    state: link
+  notify: Restart Apache
+
+- name: Ensure that memory_limit is large enough.
+  ini_file:
+    dest: /etc/php5/apache2/php.ini
+    # follow: yes ## requires ansible 1.8
+    section: PHP
+    option: memory_limit
+    value: "512M"
+    state: present
+  notify: Restart Apache
+
+# Register php_extension_dir
+- name: Fetch PHP extension dir
+  shell: "php -i | grep -i '^extension_dir' | awk '{print $3}'"
+  register: php_extension_dir
+
+# Xdebug
+- name: Copy xdebug.ini into /etc/php5/conf.d/ directory.
+  template: >
+    src=xdebug.ini.j2
+    dest=/etc/php5/conf.d/xdebug.ini
+    owner=root group=root mode=644
+  notify: Restart Apache
+
+
+# Other tools
+# ######################
+
+- name: Install Composer
+  get_url: url=https://getcomposer.org/composer.phar dest=/usr/local/bin/composer mode=0755
+
+
+# Drush
+- name: "Install Drush with global Composer"
+  shell: "{{drush_composer_bin}} global require drush/drush:{{drush_composer_version}} --prefer-source --no-interaction --no-ansi"
+  sudo_user: "{{ drush_composer_user }}"
+
+- name: "Get global Composer user home directory path."
+  shell: cat /etc/passwd | grep -Ew {{ drush_composer_user }} | cut -d":" -f6
+  register: drush_composer_user_home
+- set_fact:
+    composer_bin_dir: "{{ drush_composer_user_home.stdout }}/.composer/vendor/bin"
+
+- name: "Ensure that drush is linked to /usr/local/bin/."
+  file: src={{ composer_bin_dir }}/drush path={{ drush_bin_dir }}/drush state=link
+  when: composer_bin_dir is defined
+
+- name: "Configure Drush BASH completion"
+  file: src={{ composer_bin_dir }}/drush.complete.sh path={{ drush_bash_completion_d }}/drush state=link
+  when: composer_bin_dir is defined

@@ -1,0 +1,43 @@
+---
+- name: Install Apache2
+  apt: name=apache2 state=present
+
+- name: Disable Default Site VirtualHost
+  file: path=/etc/apache2/sites-enabled/000-default state=absent
+  notify: Restart Apache
+
+- name: Load mod_rewrite
+  file:
+    src: /etc/apache2/mods-available/rewrite.load
+    dest: /etc/apache2/mods-enabled/rewrite.load
+    state: link
+
+- name: Load mod_ssl
+  file:
+    src: /etc/apache2/mods-available/ssl.load
+    dest: /etc/apache2/mods-enabled/ssl.load
+    state: link
+
+- name: Configure mod_ssl
+  file:
+    src: /etc/apache2/mods-available/ssl.conf
+    dest: /etc/apache2/mods-enabled/ssl.conf
+    state: link
+
+- name: Configure Project VirtualHost
+  template: src=../templates/apache.conf.j2 dest=/etc/apache2/sites-available/{{ project_name }}.conf
+
+- name: Configure Project HTTPS VirtualHost
+  template: src=../templates/apache-ssl.conf.j2 dest=/etc/apache2/sites-available/{{ project_name }}-ssl.conf
+
+- name: Enable Project VirtualHost
+  file:
+    src: /etc/apache2/sites-available/{{ project_name }}.conf
+    dest: /etc/apache2/sites-enabled/{{ project_name }}.conf
+    state: link
+
+- name: Enable Project HTTPS VirtualHost
+  file:
+    src: /etc/apache2/sites-available/{{ project_name }}-ssl.conf
+    dest: /etc/apache2/sites-enabled/{{ project_name }}-ssl.conf
+    state: link

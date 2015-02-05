@@ -1,0 +1,15 @@
+---
+- include: apache.yml
+- include: php.yml
+
+# Using NFS with Vagrant, the files directories are not writable by the apache
+# user, www-data. Until we find a better solution, make them world-writable. Do
+# not use this on a public web server! In other words, ONLY try this at home. ;)
+- name: Ensure that files directories are writable.
+  file:
+    path: /var/www/{{ project_name }}/docroot/sites/{{ item }}/files
+    recurse: yes
+    state: directory
+    mode: '0777'
+  with_items:
+    - default

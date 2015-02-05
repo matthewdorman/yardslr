@@ -1,0 +1,34 @@
+<VirtualHost *:80>
+  ServerName {{ project_name }}.local
+  ServerAlias auctionslr.local
+  ServerAlias consignslr.local
+  ServerAlias estateslr.local
+  ServerAlias fleamarkets.local
+  ServerAlias pawnslr.local
+  ServerAlias reslr.local
+  ServerAlias secondslr.local
+  ServerAlias tagsellit.local
+
+  DocumentRoot /var/www/{{ project_name }}/docroot
+
+  <Directory "/var/www/{{ project_name }}/docroot/">
+      Options Indexes MultiViews FollowSymLinks
+      AllowOverride All
+      Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+      Order allow,deny
+      Allow from all
+  </Directory>
+
+  php_flag display_startup_errors on
+  php_flag display_errors on
+  php_flag html_errors on
+  php_flag log_errors on
+  php_value error_log  /var/log/apache2/{{ project_name }}-phperrors.log
+
+  LogLevel debug
+  ErrorLog /var/log/apache2/{{ project_name }}-error.log
+  CustomLog /var/log/apache2/{{ project_name }}-access.log combined
+
+  <IfModule mod_rewrite.c>
+  </IfModule>
+</VirtualHost>

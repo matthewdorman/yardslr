@@ -1,0 +1,6 @@
+---
+- hosts: drush
+  sudo: yes
+  roles:
+    - common
+    - drush

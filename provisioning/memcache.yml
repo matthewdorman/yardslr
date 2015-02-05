@@ -1,0 +1,6 @@
+---
+- hosts: memcache
+  sudo: yes
+  roles:
+    - common
+    - memcache

@@ -1,0 +1,30 @@
+[submodule "cookbooks/php"]
+	path = cookbooks/php
+	url = https://github.com/opscode-cookbooks/php.git
+[submodule "cookbooks/apt"]
+	path = cookbooks/apt
+	url = https://github.com/opscode-cookbooks/apt.git
+[submodule "cookbooks/apache2"]
+	path = cookbooks/apache2
+	url = https://github.com/opscode-cookbooks/apache2.git
+[submodule "cookbooks/mysql"]
+	path = cookbooks/mysql
+	url = https://github.com/opscode-cookbooks/mysql.git
+[submodule "cookbooks/openssl"]
+	path = cookbooks/openssl
+	url = https://github.com/opscode-cookbooks/openssl.git
+[submodule "cookbooks/build-essential"]
+	path = cookbooks/build-essential
+	url = https://github.com/opscode-cookbooks/build-essential.git
+[submodule "cookbooks/memcached"]
+	path = cookbooks/memcached
+	url = https://github.com/opscode-cookbooks/memcached.git
+[submodule "cookbooks/dotdeb"]
+	path = cookbooks/dotdeb
+	url = https://github.com/homemade/chef-dotdeb.git
+[submodule "cookbooks/postfix"]
+	path = cookbooks/postfix
+	url = https://github.com/opscode-cookbooks/postfix.git
+[submodule "docroot"]
+	path = docroot
+	url = ssh://codeserver.dev.2034e14b-b473-4af3-bc7b-b64fece9eb56@codeserver.dev.2034e14b-b473-4af3-bc7b-b64fece9eb56.drush.in:2222/~/repository.git
